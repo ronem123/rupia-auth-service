@@ -1,0 +1,17 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/rupiaDB
+    username:
+    password:
+    driver-class-name: org.postgresql.Driver
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8762/eureka/
+    fetch-registry: true
+    register-with-eureka: true
+  instance:
+    hostname: localhost
+    prefer-id-address: true
+
