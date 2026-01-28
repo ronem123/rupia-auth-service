@@ -33,7 +33,7 @@ public class AuthServiceSecurityConfig {
                                 sessionConfig.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> {
                     auth
-                            .requestMatchers("/auth/**").permitAll()
+                            .requestMatchers("/internal/auth/**").permitAll()
                             .anyRequest().authenticated();
 
                 })

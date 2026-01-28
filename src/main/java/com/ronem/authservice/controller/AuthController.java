@@ -27,15 +27,17 @@ public class AuthController {
         return new ResponseEntity<>(body, HttpStatus.OK);
     }
 
-    @PostMapping("/create-user")
+    @PostMapping("/internal/create-user")
     ResponseEntity<ApiResponse<CreateUserResponse>> createNewUser(@RequestBody CreateUserRequest request) {
         CreateUserResponse response = authService.createNewUser(request);
         return new ResponseEntity<>(new ApiResponse<>(true, "User created", response), HttpStatus.OK);
     }
 
-    @PutMapping("/activate/{userId}")
+    @PutMapping("/internal/activate/{userId}")
     ResponseEntity<ApiResponse<Boolean>> activateUser(@PathVariable Long userId) {
         Boolean activated = authService.activateUser(userId);
         return new ResponseEntity<>(new ApiResponse<>(activated, activated ? "User activated" : "Error during activation", activated), HttpStatus.OK);
     }
+
+
 }
