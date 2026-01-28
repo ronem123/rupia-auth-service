@@ -1,0 +1,13 @@
+package com.ronem.authservice.model.enums;
+
+/**
+ * Author: Ram Mandal
+ * Created on @System: Apple M1 Pro
+ * User:rammandal
+ * Date:28/01/2026
+ * Time:10:01
+ */
+
+public enum UserStatus {
+    INACTIVE, ACTIVE, SUSPENDED
+}
