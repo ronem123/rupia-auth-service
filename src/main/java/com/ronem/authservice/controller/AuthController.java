@@ -36,7 +36,10 @@ public class AuthController {
     @PutMapping("/internal/activate/{userId}")
     ResponseEntity<ApiResponse<Boolean>> activateUser(@PathVariable Long userId) {
         Boolean activated = authService.activateUser(userId);
-        return new ResponseEntity<>(new ApiResponse<>(activated, activated ? "User activated" : "Error during activation", activated), HttpStatus.OK);
+
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(new ApiResponse<>(activated, activated ? "User activated" : "Error during activation", activated));
     }
 
 
