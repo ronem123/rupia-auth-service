@@ -10,6 +10,8 @@
 package com.ronem.authservice.config;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import lombok.extern.slf4j.XSlf4j;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -18,6 +20,7 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.web.servlet.HandlerExceptionResolver;
 
+@Slf4j
 @Configuration
 @RequiredArgsConstructor
 public class AuthServiceSecurityConfig {
@@ -26,6 +29,7 @@ public class AuthServiceSecurityConfig {
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) {
+
         httpSecurity
                 .csrf(AbstractHttpConfigurer::disable)
                 .sessionManagement(
@@ -33,7 +37,7 @@ public class AuthServiceSecurityConfig {
                                 sessionConfig.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> {
                     auth
-                            .requestMatchers("/internal/auth/**").permitAll()
+                            .requestMatchers("/auth/internal/**").permitAll()
                             .anyRequest().authenticated();
 
                 })

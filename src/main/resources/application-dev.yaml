@@ -1,6 +1,6 @@
 spring:
   datasource:
-    url: jdbc:postgresql://localhost:5432/rupiaDB
+    url: jdbc:postgresql://localhost:5432/rupia-user-db
     username:
     password:
     driver-class-name: org.postgresql.Driver

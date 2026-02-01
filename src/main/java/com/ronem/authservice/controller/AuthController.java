@@ -27,7 +27,7 @@ public class AuthController {
         return new ResponseEntity<>(body, HttpStatus.OK);
     }
 
-    @PostMapping("/internal/create-user")
+    @PostMapping("/internal/user")
     ResponseEntity<ApiResponse<CreateUserResponse>> createNewUser(@RequestBody CreateUserRequest request) {
         CreateUserResponse response = authService.createNewUser(request);
         return new ResponseEntity<>(new ApiResponse<>(true, "User created", response), HttpStatus.OK);
@@ -41,6 +41,5 @@ public class AuthController {
                 .status(HttpStatus.OK)
                 .body(new ApiResponse<>(activated, activated ? "User activated" : "Error during activation", activated));
     }
-
 
 }
