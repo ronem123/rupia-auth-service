@@ -10,7 +10,9 @@
 package com.ronem.authservice.exception;
 
 import com.ronem.authservice.model.response.ApiErrorResponse;
+import com.ronem.authservice.model.response.ApiResponse;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
@@ -46,6 +48,14 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(errorResponse, errorResponse.errorCode());
     }
 
+    @ExceptionHandler(DataIntegrityViolationException.class)
+    public ResponseEntity<ApiErrorResponse> handleDuplicateKey(
+            DataIntegrityViolationException ex
+    ) {
+
+        ApiErrorResponse errorResponse = new ApiErrorResponse(false, HttpStatus.CONFLICT, "Duplicate entry", Instant.now());
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(errorResponse);
+    }
 
     // Http-Status: 500
     @ExceptionHandler(Exception.class)

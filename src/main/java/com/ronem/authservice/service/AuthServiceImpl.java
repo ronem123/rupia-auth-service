@@ -18,10 +18,12 @@ import com.ronem.authservice.model.response.CreateUserResponse;
 import com.ronem.authservice.repository.AuthRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 
+@Slf4j
 @RequiredArgsConstructor
 @Service
 public class AuthServiceImpl implements AuthService {
@@ -30,6 +32,7 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public CreateUserResponse createNewUser(CreateUserRequest request) {
+        log.info("Auth Service UserRequest body : {}", request);
         User newUser = userMapper.toEntity(request);
         newUser.setStatus(UserStatus.INACTIVE);
         newUser.setCreatedAt(LocalDateTime.now());

@@ -6,12 +6,14 @@ import com.ronem.authservice.model.response.CreateUserResponse;
 import com.ronem.authservice.service.AuthServiceImpl;
 import jakarta.ws.rs.PUT;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
 
+@Slf4j
 @RestController
 @RequestMapping("/auth")
 @RequiredArgsConstructor
@@ -29,6 +31,7 @@ public class AuthController {
 
     @PostMapping("/internal/user")
     ResponseEntity<ApiResponse<CreateUserResponse>> createNewUser(@RequestBody CreateUserRequest request) {
+        log.info("Auth Controller UserRequest body : {}", request);
         CreateUserResponse response = authService.createNewUser(request);
         return new ResponseEntity<>(new ApiResponse<>(true, "User created", response), HttpStatus.OK);
     }
