@@ -37,7 +37,9 @@ public class AuthServiceSecurityConfig {
                                 sessionConfig.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> {
                     auth
-                            .requestMatchers("/auth/internal/**").permitAll()
+                            .requestMatchers("/auth/login", "/auth/token/refresh").permitAll()
+                            .requestMatchers("/auth/internal/**").permitAll() // only gateway allowed
+                            .requestMatchers("/auth/admins/**").hasRole("SUPER_ADMIN")
                             .anyRequest().authenticated();
 
                 })

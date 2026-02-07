@@ -29,14 +29,9 @@ public class AuthController {
         return new ResponseEntity<>(body, HttpStatus.OK);
     }
 
-    @PostMapping("/internal/user")
-    ResponseEntity<ApiResponse<CreateUserResponse>> createNewUser(@RequestBody CreateUserRequest request) {
-        log.info("Auth Controller UserRequest body : {}", request);
-        CreateUserResponse response = authService.createNewUser(request);
-        return new ResponseEntity<>(new ApiResponse<>(true, "User created", response), HttpStatus.OK);
-    }
 
-    @PutMapping("/internal/activate/{userId}")
+
+    @PutMapping("/user/activate/{userId}")
     ResponseEntity<ApiResponse<Boolean>> activateUser(@PathVariable Long userId) {
         Boolean activated = authService.activateUser(userId);
 
@@ -44,5 +39,69 @@ public class AuthController {
                 .status(HttpStatus.OK)
                 .body(new ApiResponse<>(activated, activated ? "User activated" : "Error during activation", activated));
     }
+
+    @PostMapping("/login")
+    ResponseEntity<ApiResponse<CreateUserResponse>> createNewUser(@RequestBody CreateUserRequest request) {
+        log.info("Auth Controller UserRequest body : {}", request);
+        CreateUserResponse response = authService.createNewUser(request);
+        return new ResponseEntity<>(new ApiResponse<>(true, "User created", response), HttpStatus.OK);
+    }
+
+    @PostMapping("/token/refresh")
+    ResponseEntity<ApiResponse<CreateUserResponse>> createNewUser(@RequestBody CreateUserRequest request) {
+        log.info("Auth Controller UserRequest body : {}", request);
+        CreateUserResponse response = authService.createNewUser(request);
+        return new ResponseEntity<>(new ApiResponse<>(true, "User created", response), HttpStatus.OK);
+    }
+
+    @PostMapping("/logout")
+    ResponseEntity<ApiResponse<CreateUserResponse>> createNewUser(@RequestBody CreateUserRequest request) {
+        log.info("Auth Controller UserRequest body : {}", request);
+        CreateUserResponse response = authService.createNewUser(request);
+        return new ResponseEntity<>(new ApiResponse<>(true, "User created", response), HttpStatus.OK);
+    }
+
+    //only super admin will access this
+    @PostMapping("/admins")
+    ResponseEntity<CreateUserResponse> createAdmin(@RequestBody CreateUserRequest request) {
+        log.info("Admin Controller UserRequest body : {}", request);
+        CreateUserResponse createUserResponse = adminService.createAdmin(request);
+        return ResponseEntity.status(HttpStatus.CREATED).body(createUserResponse);
+    }
+
+    @PutMapping("/admins/{userId}/activate")
+    ResponseEntity<CreateUserResponse> approveAdmin(@PathVariable Long userId) {
+        CreateUserResponse createUserResponse = adminService.approveAdmin(userId);
+        return ResponseEntity.status(HttpStatus.OK).body(createUserResponse);
+    }
+
+    @PutMapping("/admins/{userId}/block")
+    ResponseEntity<CreateUserResponse> approveAdmin(@PathVariable Long userId) {
+        CreateUserResponse createUserResponse = adminService.approveAdmin(userId);
+        return ResponseEntity.status(HttpStatus.OK).body(createUserResponse);
+    }
+
+    //list of admins
+    @GetMapping("/admins")
+    ResponseEntity<CreateUserResponse> createAdmin(@RequestBody CreateUserRequest request) {
+        log.info("Admin Controller UserRequest body : {}", request);
+        CreateUserResponse createUserResponse = adminService.createAdmin(request);
+        return ResponseEntity.status(HttpStatus.CREATED).body(createUserResponse);
+    }
+
+    @PostMapping("/internal/users")
+    ResponseEntity<ApiResponse<CreateUserResponse>> createNewUser(@RequestBody CreateUserRequest request) {
+        log.info("Auth Controller UserRequest body : {}", request);
+        CreateUserResponse response = authService.createNewUser(request);
+        return new ResponseEntity<>(new ApiResponse<>(true, "User created", response), HttpStatus.OK);
+    }
+
+    @GetMapping("/internal/uesrs/{userId}")
+    ResponseEntity<CreateUserResponse> createAdmin(@RequestBody CreateUserRequest request) {
+        log.info("Admin Controller UserRequest body : {}", request);
+        CreateUserResponse createUserResponse = adminService.createAdmin(request);
+        return ResponseEntity.status(HttpStatus.CREATED).body(createUserResponse);
+    }
+
 
 }
