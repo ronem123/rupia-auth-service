@@ -2,6 +2,7 @@ package com.ronem.authservice.service;
 
 import com.ronem.authservice.model.request.CreateUserRequest;
 import com.ronem.authservice.model.response.CreateUserResponse;
+import com.ronem.authservice.model.dto.UserDTO;
 
 /**
  * Author: Ram Mandal
@@ -12,6 +13,15 @@ import com.ronem.authservice.model.response.CreateUserResponse;
  */
 
 public interface AuthService {
+    //method to create new customer
     CreateUserResponse createNewUser(CreateUserRequest request);
+
+    //approve customer/admin: update status: ACTIVE
     Boolean activateUser(Long userId);
+
+    //block customer/admin : update status : INACTIVE
+    Boolean blockUser(Long userId);
+
+    //method to login user
+    UserDTO login(CreateUserRequest request);
 }

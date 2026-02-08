@@ -10,9 +10,13 @@
 package com.ronem.authservice.repository;
 
 import com.ronem.authservice.model.entity.User;
+import com.ronem.authservice.model.response.CreateUserResponse;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.Optional;
+
 @Repository
 public interface AuthRepository extends JpaRepository<User, Long> {
+    Optional<User> findByEmailOrMobileNumber(String email, String mobileNumber);
 }

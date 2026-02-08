@@ -21,7 +21,7 @@ class RupiaAuthServiceApplicationTests {
                 .email("ram.cp18113@gmail.com")
                 .userRole(UserRole.CUSTOMER.name())
                 .build();
-        authService.createNewUser(request);
+        authService.createNewCustomer(request);
     }
 
 }

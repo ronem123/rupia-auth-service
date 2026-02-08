@@ -9,5 +9,5 @@ package com.ronem.authservice.model.enums;
  */
 
 public enum UserStatus {
-    INACTIVE, ACTIVE, SUSPENDED
+    INACTIVE, ACTIVE, BLOCK, SUSPENDED
 }

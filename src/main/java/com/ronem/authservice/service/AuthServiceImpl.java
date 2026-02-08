@@ -15,6 +15,7 @@ import com.ronem.authservice.model.entity.User;
 import com.ronem.authservice.model.enums.UserStatus;
 import com.ronem.authservice.model.request.CreateUserRequest;
 import com.ronem.authservice.model.response.CreateUserResponse;
+import com.ronem.authservice.model.dto.UserDTO;
 import com.ronem.authservice.repository.AuthRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -39,6 +40,7 @@ public class AuthServiceImpl implements AuthService {
         return userMapper.toResponse(authRepository.save(newUser));
     }
 
+
     @Transactional
     @Override
     public Boolean activateUser(Long userId) {
@@ -49,5 +51,23 @@ public class AuthServiceImpl implements AuthService {
             user.setStatus(UserStatus.ACTIVE);
         }
         return true;
+    }
+
+    @Override
+    public Boolean blockUser(Long userId) {
+        User user = authRepository.findById(userId).orElseThrow(() -> new BadRequestException("User not found for " + userId));
+        if (user.getStatus() == UserStatus.BLOCK) {
+            throw new BadRequestException("User already in blocked state");
+        } else {
+            user.setStatus(UserStatus.BLOCK);
+        }
+        return true;
+    }
+
+    @Override
+    public UserDTO login(CreateUserRequest request) {
+        User user = authRepository.findByEmailOrMobileNumber(request.getEmail(), request.getMobileNumber())
+                .orElseThrow(() -> new BadRequestException("User not found"));
+        return userMapper.toUserDTO(user);
     }
 }
