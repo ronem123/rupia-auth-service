@@ -3,6 +3,7 @@ package com.ronem.authservice.service;
 import com.ronem.authservice.model.request.CreateUserRequest;
 import com.ronem.authservice.model.response.CreateUserResponse;
 import com.ronem.authservice.model.dto.UserDTO;
+import com.ronem.authservice.model.response.LoginResponse;
 
 /**
  * Author: Ram Mandal
@@ -22,6 +23,6 @@ public interface AuthService {
     //block customer/admin : update status : INACTIVE
     Boolean blockUser(Long userId);
 
-    //method to login user
-    UserDTO login(CreateUserRequest request);
+    //method to login superadmin and admin user
+    LoginResponse adminLogin(String email, String password);
 }

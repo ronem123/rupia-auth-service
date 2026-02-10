@@ -16,10 +16,14 @@ import com.ronem.authservice.model.enums.UserStatus;
 import com.ronem.authservice.model.request.CreateUserRequest;
 import com.ronem.authservice.model.response.CreateUserResponse;
 import com.ronem.authservice.model.dto.UserDTO;
+import com.ronem.authservice.model.response.LoginResponse;
 import com.ronem.authservice.repository.AuthRepository;
+import com.ronem.authservice.service.jwt.JwtAuthService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -29,6 +33,8 @@ import java.time.LocalDateTime;
 @Service
 public class AuthServiceImpl implements AuthService {
     private final AuthRepository authRepository;
+    private final JwtAuthService jwtAuthService;
+    private final PasswordEncoder passwordEncoder;
     private final UserMapper userMapper;
 
     @Override
@@ -65,9 +71,20 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
-    public UserDTO login(CreateUserRequest request) {
-        User user = authRepository.findByEmailOrMobileNumber(request.getEmail(), request.getMobileNumber())
+    public LoginResponse adminLogin(String email, String password) {
+        if (email.isEmpty() || password.isEmpty()) {
+            throw new BadRequestException("Invalid email or password");
+        }
+        User user = authRepository.findByEmail(email)
                 .orElseThrow(() -> new BadRequestException("User not found"));
-        return userMapper.toUserDTO(user);
+
+        log.info("User found with email {}: password {}", user.getEmail(), user.getPassword());
+        if (!passwordEncoder.matches(password, user.getPassword())) {
+            throw new BadRequestException("Invalid user, Password didn't match");
+        }
+
+        String accessToken = jwtAuthService.createToken(user);
+        String refreshToken = jwtAuthService.createRefreshToken(user);
+        return new LoginResponse(user.getId(), accessToken, refreshToken);
     }
 }

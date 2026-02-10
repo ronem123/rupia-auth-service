@@ -14,6 +14,5 @@ import lombok.Data;
 @Data
 public class LoginRequest {
     String email;
-    String mobileNumber;
     String password;
 }

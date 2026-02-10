@@ -9,6 +9,7 @@
 
 package com.ronem.authservice.config;
 
+import com.ronem.authservice.filter.JwtAuthFilter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import lombok.extern.slf4j.XSlf4j;
@@ -18,6 +19,7 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.servlet.HandlerExceptionResolver;
 
 @Slf4j
@@ -25,6 +27,7 @@ import org.springframework.web.servlet.HandlerExceptionResolver;
 @RequiredArgsConstructor
 public class AuthServiceSecurityConfig {
 
+    private final JwtAuthFilter jwtAuthFilter;
     private final HandlerExceptionResolver handlerExceptionResolver;
 
     @Bean
@@ -37,9 +40,7 @@ public class AuthServiceSecurityConfig {
                                 sessionConfig.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> {
                     auth
-                            .requestMatchers("/auth/login", "/auth/token/refresh").permitAll()
-                            .requestMatchers("/auth/internal/**").permitAll() // only gateway allowed
-                            .requestMatchers("/auth/admins/**").hasRole("SUPER_ADMIN")
+                            .requestMatchers("/auth/admin/login/**").permitAll()
                             .anyRequest().authenticated();
 
                 })
@@ -49,7 +50,10 @@ public class AuthServiceSecurityConfig {
                                         handlerExceptionResolver.resolveException(request, response, null, authException))
                                 .accessDeniedHandler((request, response, accessDeniedException) ->
                                         handlerExceptionResolver.resolveException(request, response, null, accessDeniedException))
-                );
+                )
+                .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
+        ;
+
         return httpSecurity.build();
     }
 }
