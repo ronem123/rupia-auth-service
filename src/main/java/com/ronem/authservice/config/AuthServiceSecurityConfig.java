@@ -10,6 +10,7 @@
 package com.ronem.authservice.config;
 
 import com.ronem.authservice.filter.JwtAuthFilter;
+import com.ronem.authservice.model.enums.UserRole;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import lombok.extern.slf4j.XSlf4j;

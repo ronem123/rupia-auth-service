@@ -2,19 +2,25 @@ package com.ronem.authservice.controller;
 
 import com.ronem.authservice.model.dto.LoginRequest;
 import com.ronem.authservice.model.dto.UserDTO;
+import com.ronem.authservice.model.enums.UserRole;
 import com.ronem.authservice.model.request.CreateUserRequest;
 import com.ronem.authservice.model.response.ApiResponse;
 import com.ronem.authservice.model.response.CreateUserResponse;
 import com.ronem.authservice.model.response.LoginResponse;
 import com.ronem.authservice.service.AuthServiceImpl;
+import com.ronem.authservice.validation.AdminValidation;
+import jakarta.validation.Valid;
 import jakarta.ws.rs.PUT;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
+import java.util.List;
 
 @Slf4j
 @RestController
@@ -34,7 +40,7 @@ public class AuthController {
 
     //End points for admin access
     @PostMapping("/admin/login")
-    ResponseEntity<ApiResponse<LoginResponse>> login(@RequestBody LoginRequest request) {
+    ResponseEntity<ApiResponse<LoginResponse>> login(@Valid @RequestBody LoginRequest request) {
         log.info("Auth Controller UserRequest body : {}", request);
         LoginResponse response = authService.adminLogin(request.getEmail(), request.getPassword());
         return ResponseEntity.status(HttpStatus.OK).body(new ApiResponse<>(true, "success", response));
@@ -43,13 +49,15 @@ public class AuthController {
 
     // Create admin. Only super admin has access to this
     @PostMapping("/admin")
-    ResponseEntity<CreateUserResponse> createAdmin(@RequestBody CreateUserRequest request) {
+    @PreAuthorize("hasRole('SUPER_ADMIN')")
+    ResponseEntity<CreateUserResponse> createAdmin(@Validated(AdminValidation.class) @RequestBody CreateUserRequest request) {
         log.info("Admin Controller UserRequest body : {}", request);
         CreateUserResponse createUserResponse = authService.createNewUser(request);
         return ResponseEntity.status(HttpStatus.CREATED).body(createUserResponse);
     }
 
     @PutMapping("/admin/activate/{userId}")
+    @PreAuthorize("hasRole('SUPER_ADMIN')")
     ResponseEntity<ApiResponse<Boolean>> activateUser(@PathVariable Long userId) {
         Boolean activated = authService.activateUser(userId);
 
@@ -59,12 +67,12 @@ public class AuthController {
     }
 
     //Get list of admins
-//    @GetMapping("/admin")
-//    ResponseEntity<CreateUserResponse> createAdmin(@RequestBody CreateUserRequest request) {
-//        log.info("Admin Controller UserRequest body : {}", request);
-//        CreateUserResponse createUserResponse = adminService.createAdmin(request);
-//        return ResponseEntity.status(HttpStatus.CREATED).body(createUserResponse);
-//    }
+    @GetMapping("/admin")
+    @PreAuthorize("hasRole('SUPER_ADMIN')")
+    ResponseEntity<List<UserDTO>> getAdmins() {
+        List<UserDTO> users = authService.getUserLists(UserRole.ADMIN);
+        return ResponseEntity.status(HttpStatus.CREATED).body(users);
+    }
 
 //    @PutMapping("/admin/{userId}/activate")
 //    ResponseEntity<CreateUserResponse> approveAdmin(@PathVariable Long userId) {

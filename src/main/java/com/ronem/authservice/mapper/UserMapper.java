@@ -16,15 +16,21 @@ import com.ronem.authservice.model.dto.UserDTO;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
+import java.util.List;
+
 @Mapper(componentModel = "spring")
 public interface UserMapper {
 
     @Mapping(target = "userId", source = "user.id")
     CreateUserResponse toResponse(User user);
 
-    @Mapping(target ="userRole", source = "user.userRole")
-    @Mapping(target ="status", source = "user.status")
+    @Mapping(target = "userRole", source = "user.userRole")
+    @Mapping(target = "status", source = "user.status")
     UserDTO toUserDTO(User user);
+
+    @Mapping(target = "userRole", source = "user.userRole")
+    @Mapping(target = "status", source = "user.status")
+    List<UserDTO> toUserDTO(List<User> users);
 
     User toEntity(CreateUserRequest request);
 }

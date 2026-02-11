@@ -9,10 +9,13 @@
 
 package com.ronem.authservice.model.dto;
 
+import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
 
 @Data
 public class LoginRequest {
+    @NotBlank(message = "Email is Required")
     String email;
+    @NotBlank(message = "Password is Required")
     String password;
 }

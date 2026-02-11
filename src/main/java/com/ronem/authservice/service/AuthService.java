@@ -1,9 +1,12 @@
 package com.ronem.authservice.service;
 
+import com.ronem.authservice.model.enums.UserRole;
 import com.ronem.authservice.model.request.CreateUserRequest;
 import com.ronem.authservice.model.response.CreateUserResponse;
 import com.ronem.authservice.model.dto.UserDTO;
 import com.ronem.authservice.model.response.LoginResponse;
+
+import java.util.List;
 
 /**
  * Author: Ram Mandal
@@ -25,4 +28,7 @@ public interface AuthService {
 
     //method to login superadmin and admin user
     LoginResponse adminLogin(String email, String password);
+
+    //method to return list of Users
+    List<UserDTO> getUserLists(UserRole userRole);
 }
