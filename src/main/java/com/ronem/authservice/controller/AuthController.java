@@ -30,30 +30,36 @@ public class AuthController {
 
     private final AuthServiceImpl authService;
 
-    @GetMapping(value = "/greet")
-    ResponseEntity<HashMap<String, String>> greet() {
-        HashMap<String, String> body = new HashMap<>();
-        body.put("Status", "success");
-        body.put("Message", "Welcome to microservice");
-        return new ResponseEntity<>(body, HttpStatus.OK);
-    }
 
     //End points for admin access
     @PostMapping("/admin/login")
     ResponseEntity<ApiResponse<LoginResponse>> login(@Valid @RequestBody LoginRequest request) {
         log.info("Auth Controller UserRequest body : {}", request);
         LoginResponse response = authService.adminLogin(request.getEmail(), request.getPassword());
-        return ResponseEntity.status(HttpStatus.OK).body(new ApiResponse<>(true, "success", response));
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(new ApiResponse<>(true, "success", response));
     }
 
 
     // Create admin. Only super admin has access to this
     @PostMapping("/admin")
     @PreAuthorize("hasRole('SUPER_ADMIN')")
-    ResponseEntity<CreateUserResponse> createAdmin(@Validated(AdminValidation.class) @RequestBody CreateUserRequest request) {
+    ResponseEntity<ApiResponse<CreateUserResponse>> createAdmin(@Validated(AdminValidation.class) @RequestBody CreateUserRequest request) {
         log.info("Admin Controller UserRequest body : {}", request);
         CreateUserResponse createUserResponse = authService.createNewUser(request);
-        return ResponseEntity.status(HttpStatus.CREATED).body(createUserResponse);
+        return ResponseEntity
+                .status(HttpStatus.CREATED)
+                .body(new ApiResponse<>(true, "user created", createUserResponse));
+    }
+
+    @GetMapping("/admin")
+    @PreAuthorize("hasRole('SUPER_ADMIN')")
+    ResponseEntity<ApiResponse<List<UserDTO>>> getAdmins() {
+        List<UserDTO> users = authService.getUserLists(UserRole.ADMIN);
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(new ApiResponse<>(true, "success", users));
     }
 
     @PutMapping("/admin/activate/{userId}")
@@ -66,42 +72,25 @@ public class AuthController {
                 .body(new ApiResponse<>(activated, activated ? "User activated" : "Error during activation", activated));
     }
 
-    //Get list of admins
-    @GetMapping("/admin")
+    @PutMapping("/admin/block/{userId}")
     @PreAuthorize("hasRole('SUPER_ADMIN')")
-    ResponseEntity<List<UserDTO>> getAdmins() {
-        List<UserDTO> users = authService.getUserLists(UserRole.ADMIN);
-        return ResponseEntity.status(HttpStatus.CREATED).body(users);
+    ResponseEntity<ApiResponse<Boolean>> blockUser(@PathVariable Long userId) {
+        Boolean blocked = authService.blockUser(userId);
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(new ApiResponse<>(blocked, blocked ? "User blocked" : "Error during user block", blocked));
     }
-
-//    @PutMapping("/admin/{userId}/activate")
-//    ResponseEntity<CreateUserResponse> approveAdmin(@PathVariable Long userId) {
-//        CreateUserResponse createUserResponse = adminService.approveAdmin(userId);
-//        return ResponseEntity.status(HttpStatus.OK).body(createUserResponse);
-//    }
-
-//    @PutMapping("/admin/{userId}/block")
-//    ResponseEntity<CreateUserResponse> approveAdmin(@PathVariable Long userId) {
-//        CreateUserResponse createUserResponse = adminService.approveAdmin(userId);
-//        return ResponseEntity.status(HttpStatus.OK).body(createUserResponse);
-//    }
 
 
     //End points for Customers
     //internal endpoints
-//    @PostMapping("/internal/users")
-//    ResponseEntity<ApiResponse<CreateUserResponse>> createNewUser(@RequestBody CreateUserRequest request) {
-//        log.info("Auth Controller UserRequest body : {}", request);
-//        CreateUserResponse response = authService.createNewUser(request);
-//        return new ResponseEntity<>(new ApiResponse<>(true, "User created", response), HttpStatus.OK);
-//    }
-
-//    @GetMapping("/internal/users/{userId}")
-//    ResponseEntity<CreateUserResponse> createAdmin(@RequestBody CreateUserRequest request) {
-//        log.info("Admin Controller UserRequest body : {}", request);
-//        CreateUserResponse createUserResponse = adminService.createAdmin(request);
-//        return ResponseEntity.status(HttpStatus.CREATED).body(createUserResponse);
-//    }
+    @PostMapping("/internal/users")
+    ResponseEntity<ApiResponse<CreateUserResponse>> createCustomerUser(@RequestBody CreateUserRequest request) {
+        CreateUserResponse response = authService.createNewUser(request);
+        return ResponseEntity
+                .status(HttpStatus.CREATED)
+                .body(new ApiResponse<>(true, "User created", response));
+    }
 
 
 //    @PostMapping("/otp/send")

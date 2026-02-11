@@ -67,6 +67,7 @@ public class AuthServiceImpl implements AuthService {
         return true;
     }
 
+    @Transactional
     @Override
     public Boolean blockUser(Long userId) {
         User user = authRepository.findById(userId).orElseThrow(() -> new BadRequestException("User not found for " + userId));

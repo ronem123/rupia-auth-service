@@ -13,6 +13,7 @@ import com.ronem.authservice.model.entity.User;
 import com.ronem.authservice.model.enums.UserRole;
 import com.ronem.authservice.model.enums.UserStatus;
 import com.ronem.authservice.repository.AuthRepository;
+import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -35,6 +36,19 @@ public class SuperAdminSeeder {
 
     @Value("${bootstrap.super-admin.password}")
     private String password;
+
+    @Value("${server.address:NOT_SET}")
+    private String serverAddress;
+
+    @Value("${server.port}")
+    private int serverPort;
+
+    @PostConstruct
+    void logServerConfig() {
+        System.out.println("Server address = " + serverAddress);
+        System.out.println("Server port = " + serverPort);
+    }
+
 
     @EventListener(ApplicationReadyEvent.class)
     public void seedSuperAdmin() {

@@ -12,6 +12,7 @@ package com.ronem.authservice.model.dto;
 import java.time.LocalDateTime;
 
 public record UserDTO(
+        String id,
         String email,
         String mobileNumber,
         String userRole,

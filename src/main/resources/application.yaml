@@ -20,6 +20,7 @@ logging:
     org.springframework.security: DEBUG
 
 server:
+#  address: 0.0.0.0  #listen to all IP
   port: 8092
 
 eureka:
@@ -28,7 +29,7 @@ eureka:
     register-with-eureka: true
   instance:
     instance-id: ${spring.application.name}:${server.port}
-    prefer-ip-address: true                      # Use IP instead of hostname for registration (useful for containers)
+    prefer-ip-address: true                      # Use IP instead of hostname for registration (useful for containers). It will be your private IP 192.168.60.26:8092
     lease-renewal-interval-in-seconds: 10        # default is 30
     lease-expiration-duration-in-seconds: 30     # default is 90
 
