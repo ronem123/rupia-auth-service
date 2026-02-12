@@ -9,6 +9,7 @@ import com.ronem.authservice.model.response.CreateUserResponse;
 import com.ronem.authservice.model.response.LoginResponse;
 import com.ronem.authservice.service.AuthServiceImpl;
 import com.ronem.authservice.validation.AdminValidation;
+import com.ronem.authservice.validation.CustomerValidation;
 import jakarta.validation.Valid;
 import jakarta.ws.rs.PUT;
 import lombok.RequiredArgsConstructor;
@@ -85,11 +86,17 @@ public class AuthController {
     //End points for Customers
     //internal endpoints
     @PostMapping("/internal/users")
-    ResponseEntity<ApiResponse<CreateUserResponse>> createCustomerUser(@RequestBody CreateUserRequest request) {
+    ResponseEntity<ApiResponse<CreateUserResponse>> createCustomerUser(@Validated(CustomerValidation.class) @RequestBody CreateUserRequest request) {
         CreateUserResponse response = authService.createNewUser(request);
         return ResponseEntity
                 .status(HttpStatus.CREATED)
                 .body(new ApiResponse<>(true, "User created", response));
+    }
+
+    @DeleteMapping("/internal/users/{userId}")
+    ResponseEntity<ApiResponse<Boolean>> deleteUser(@PathVariable Long userId) {
+        authService.deleteUser(userId);
+        return ResponseEntity.status(HttpStatus.OK).body(new ApiResponse<>(true, "Deleted", true));
     }
 
 

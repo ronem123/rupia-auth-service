@@ -10,6 +10,8 @@
 package com.ronem.authservice.service;
 
 import com.ronem.authservice.exception.BadRequestException;
+import com.ronem.authservice.exception.UserAlreadyExistException;
+import com.ronem.authservice.exception.UserNotFoundException;
 import com.ronem.authservice.mapper.UserMapper;
 import com.ronem.authservice.model.entity.User;
 import com.ronem.authservice.model.enums.UserRole;
@@ -24,6 +26,8 @@ import jakarta.transaction.Transactional;
 import jakarta.ws.rs.NotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.dao.DuplicateKeyException;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -41,9 +45,14 @@ public class AuthServiceImpl implements AuthService {
     private final PasswordEncoder passwordEncoder;
     private final UserMapper userMapper;
 
+    @Transactional
     @Override
     public CreateUserResponse createNewUser(CreateUserRequest request) {
         log.info("Auth Service UserRequest body : {}", request);
+        boolean existedUser = authRepository.existsByEmailOrMobileNumber(request.getEmail(), request.getMobileNumber());
+        if (existedUser) {
+            throw new UserAlreadyExistException("User already exists with provided information");
+        }
         User newUser = userMapper.toEntity(request);
         newUser.setStatus(UserStatus.INACTIVE);
         newUser.setCreatedAt(LocalDateTime.now());
@@ -51,6 +60,19 @@ public class AuthServiceImpl implements AuthService {
             newUser.setPassword(passwordEncoder.encode(request.getPassword()));
         }
         return userMapper.toResponse(authRepository.save(newUser));
+    }
+
+    @Override
+    public boolean deleteUser(Long userId) {
+        User user = authRepository.findById(userId).orElseThrow(() -> new UserNotFoundException(HttpStatus.NOT_FOUND, "User not found to delete"));
+        boolean deleted;
+        try {
+            authRepository.delete(user);
+            deleted = true;
+        } catch (Exception e) {
+            deleted = false;
+        }
+        return deleted;
     }
 
 

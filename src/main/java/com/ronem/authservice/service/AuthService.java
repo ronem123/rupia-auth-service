@@ -20,6 +20,9 @@ public interface AuthService {
     //method to create new customer
     CreateUserResponse createNewUser(CreateUserRequest request);
 
+    //delete user
+    boolean deleteUser(Long userId);
+
     //approve customer/admin: update status: ACTIVE
     Boolean activateUser(Long userId);
 

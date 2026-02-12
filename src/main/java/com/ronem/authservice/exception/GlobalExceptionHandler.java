@@ -76,10 +76,30 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ApiResponse<>(false, "failed", errors));
     }
 
+    @ExceptionHandler(UserAlreadyExistException.class)
+    public ResponseEntity<ApiErrorResponse> handleUserAlreadyExists(
+            UserAlreadyExistException ex) {
+
+        ApiErrorResponse errorResponse =
+                new ApiErrorResponse(
+                        false,
+                        HttpStatus.CONFLICT,
+                        ex.getMessage(),
+                        Instant.now()
+                );
+
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(errorResponse);
+    }
+
+
     // Http-Status: 500
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ApiErrorResponse> handleGenericException(Exception ex) {
-        ApiErrorResponse errorResponse = new ApiErrorResponse(false, HttpStatus.INTERNAL_SERVER_ERROR, "An unexpected error occurred." + ex.getMessage(), Instant.now());
-        return new ResponseEntity<>(errorResponse, errorResponse.errorCode());
+        ApiErrorResponse errorResponse =
+                new ApiErrorResponse(false,
+                        HttpStatus.INTERNAL_SERVER_ERROR,
+                        "An unexpected error occurred", Instant.now());
+
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
     }
 }

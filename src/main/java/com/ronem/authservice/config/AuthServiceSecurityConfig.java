@@ -42,7 +42,7 @@ public class AuthServiceSecurityConfig {
                 .authorizeHttpRequests(auth -> {
                     auth
                             .requestMatchers("/auth/admin/login/**").permitAll()
-                            .requestMatchers("/auth/internal/users").permitAll()
+                            .requestMatchers("/auth/internal/users/**").permitAll()
                             .requestMatchers("/actuator/health", "/actuator/info").permitAll()
                             .anyRequest().authenticated();
 
