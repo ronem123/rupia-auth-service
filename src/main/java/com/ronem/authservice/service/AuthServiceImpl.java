@@ -10,6 +10,7 @@
 package com.ronem.authservice.service;
 
 import com.ronem.authservice.exception.BadRequestException;
+import com.ronem.authservice.exception.InvalidUserException;
 import com.ronem.authservice.exception.UserAlreadyExistException;
 import com.ronem.authservice.exception.UserNotFoundException;
 import com.ronem.authservice.mapper.UserMapper;
@@ -104,10 +105,26 @@ public class AuthServiceImpl implements AuthService {
     @Transactional
     @Override
     public LoginResponse adminLogin(String email, String password) {
+
         if (email.isEmpty() || password.isEmpty()) {
             throw new BadRequestException("Invalid email or password");
         }
         User user = authRepository.findByEmail(email).orElseThrow(() -> new BadRequestException("User not found"));
+
+        log.info("User found with email {}: password {}", user.getEmail(), user.getPassword());
+
+
+        if (user.getStatus() == UserStatus.INACTIVE) {
+            throw new InvalidUserException(HttpStatus.BAD_REQUEST, "User not ACTIVE");
+        }
+
+        if (user.getStatus() == UserStatus.SUSPENDED) {
+            throw new InvalidUserException(HttpStatus.BAD_REQUEST, "User not ACTIVE");
+        }
+
+        if (user.getStatus() == UserStatus.BLOCK) {
+            throw new InvalidUserException(HttpStatus.BAD_REQUEST, "User not ACTIVE");
+        }
 
         log.info("User found with email {}: password {}", user.getEmail(), user.getPassword());
         if (!passwordEncoder.matches(password, user.getPassword())) {

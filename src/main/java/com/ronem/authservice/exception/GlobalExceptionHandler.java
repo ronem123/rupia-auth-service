@@ -91,6 +91,13 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.CONFLICT).body(errorResponse);
     }
 
+    //400 invalid user
+    @ExceptionHandler(InvalidUserException.class)
+    public ResponseEntity<ApiErrorResponse> handleInvalidUser(InvalidUserException iuex) {
+        ApiErrorResponse errorResponse =
+                new ApiErrorResponse(false, iuex.status, iuex.getMessage(), Instant.now());
+        return ResponseEntity.status(errorResponse.errorCode()).body(errorResponse);
+    }
 
     // Http-Status: 500
     @ExceptionHandler(Exception.class)
