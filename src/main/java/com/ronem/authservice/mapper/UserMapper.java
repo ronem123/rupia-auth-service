@@ -10,8 +10,8 @@
 package com.ronem.authservice.mapper;
 
 import com.ronem.authservice.model.entity.User;
-import com.ronem.authservice.model.request.CreateUserRequest;
-import com.ronem.authservice.model.response.CreateUserResponse;
+import com.ronem.authservice.model.dto.request.CreateUserRequest;
+import com.ronem.authservice.model.dto.response.CreateUserResponse;
 import com.ronem.authservice.model.dto.UserDTO;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;

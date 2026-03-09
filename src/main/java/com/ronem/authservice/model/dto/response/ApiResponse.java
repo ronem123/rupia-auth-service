@@ -1,4 +1,4 @@
-package com.ronem.authservice.model.response;
+package com.ronem.authservice.model.dto.response;
 
 
 import lombok.AllArgsConstructor;

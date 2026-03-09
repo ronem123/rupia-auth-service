@@ -9,8 +9,8 @@
 
 package com.ronem.authservice.exception;
 
-import com.ronem.authservice.model.response.ApiErrorResponse;
-import com.ronem.authservice.model.response.ApiResponse;
+import com.ronem.authservice.model.dto.response.ApiErrorResponse;
+import com.ronem.authservice.model.dto.response.ApiResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;

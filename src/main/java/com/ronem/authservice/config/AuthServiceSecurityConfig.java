@@ -9,11 +9,9 @@
 
 package com.ronem.authservice.config;
 
-import com.ronem.authservice.filter.JwtAuthFilter;
-import com.ronem.authservice.model.enums.UserRole;
+import com.ronem.rupiasecuritylib.filter.JwtAuthenticationFilter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import lombok.extern.slf4j.XSlf4j;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -28,7 +26,7 @@ import org.springframework.web.servlet.HandlerExceptionResolver;
 @RequiredArgsConstructor
 public class AuthServiceSecurityConfig {
 
-    private final JwtAuthFilter jwtAuthFilter;
+    private final JwtAuthenticationFilter jwtAuthFilter;
     private final HandlerExceptionResolver handlerExceptionResolver;
 
     @Bean
@@ -59,4 +57,6 @@ public class AuthServiceSecurityConfig {
 
         return httpSecurity.build();
     }
+
+
 }

@@ -11,11 +11,9 @@ package com.ronem.authservice.repository;
 
 import com.ronem.authservice.model.entity.User;
 import com.ronem.authservice.model.enums.UserRole;
-import com.ronem.authservice.model.response.CreateUserResponse;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import javax.swing.text.html.Option;
 import java.util.List;
 import java.util.Optional;
 

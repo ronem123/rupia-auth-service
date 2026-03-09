@@ -1,17 +1,16 @@
 package com.ronem.authservice.controller;
 
-import com.ronem.authservice.model.dto.LoginRequest;
 import com.ronem.authservice.model.dto.UserDTO;
 import com.ronem.authservice.model.enums.UserRole;
-import com.ronem.authservice.model.request.CreateUserRequest;
-import com.ronem.authservice.model.response.ApiResponse;
-import com.ronem.authservice.model.response.CreateUserResponse;
-import com.ronem.authservice.model.response.LoginResponse;
+import com.ronem.authservice.model.dto.request.AdminLoginRequest;
+import com.ronem.authservice.model.dto.request.CreateUserRequest;
+import com.ronem.authservice.model.dto.response.ApiResponse;
+import com.ronem.authservice.model.dto.response.CreateUserResponse;
+import com.ronem.authservice.model.dto.response.LoginResponse;
 import com.ronem.authservice.service.AuthServiceImpl;
 import com.ronem.authservice.validation.AdminValidation;
 import com.ronem.authservice.validation.CustomerValidation;
 import jakarta.validation.Valid;
-import jakarta.ws.rs.PUT;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -20,7 +19,6 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.HashMap;
 import java.util.List;
 
 @Slf4j
@@ -34,9 +32,9 @@ public class AuthController {
 
     //End points for admin access
     @PostMapping("/admin/login")
-    ResponseEntity<ApiResponse<LoginResponse>> login(@Valid @RequestBody LoginRequest request) {
+    ResponseEntity<ApiResponse<LoginResponse>> login(@Valid @RequestBody AdminLoginRequest request) {
         log.info("Auth Controller UserRequest body : {}", request);
-        LoginResponse response = authService.adminLogin(request.getEmail(), request.getPassword());
+        LoginResponse response = authService.adminLogin(request);
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(new ApiResponse<>(true, "success", response));
@@ -44,7 +42,7 @@ public class AuthController {
 
 
     // Create admin. Only super admin has access to this
-    @PostMapping("/admin")
+    @PostMapping("/create-admin")
     @PreAuthorize("hasRole('SUPER_ADMIN')")
     ResponseEntity<ApiResponse<CreateUserResponse>> createAdmin(@Validated(AdminValidation.class) @RequestBody CreateUserRequest request) {
         log.info("Admin Controller UserRequest body : {}", request);

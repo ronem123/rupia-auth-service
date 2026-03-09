@@ -7,7 +7,7 @@
  */
 
 
-package com.ronem.authservice.model.request;
+package com.ronem.authservice.model.dto.request;
 
 import com.ronem.authservice.validation.AdminValidation;
 import com.ronem.authservice.validation.CustomerValidation;

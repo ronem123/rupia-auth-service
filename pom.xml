@@ -145,6 +145,14 @@
         </dependency>
         <!--====================Eureka Discovery Start=================-->
 
+        <!--Sub modules-->
+        <!--Security library-->
+        <dependency>
+            <groupId>com.ronem.rupia</groupId>
+            <artifactId>rupia-security-lib</artifactId>
+            <version>0.0.6-SNAPSHOT</version>
+        </dependency>
+
     </dependencies>
 
     <dependencyManagement>

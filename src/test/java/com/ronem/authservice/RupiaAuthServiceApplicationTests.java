@@ -1,9 +1,8 @@
 package com.ronem.authservice;
 
 import com.ronem.authservice.model.enums.UserRole;
-import com.ronem.authservice.model.request.CreateUserRequest;
+import com.ronem.authservice.model.dto.request.CreateUserRequest;
 import com.ronem.authservice.service.AuthServiceImpl;
-import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;

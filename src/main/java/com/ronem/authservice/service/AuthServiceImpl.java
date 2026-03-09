@@ -17,22 +17,20 @@ import com.ronem.authservice.mapper.UserMapper;
 import com.ronem.authservice.model.entity.User;
 import com.ronem.authservice.model.enums.UserRole;
 import com.ronem.authservice.model.enums.UserStatus;
-import com.ronem.authservice.model.request.CreateUserRequest;
-import com.ronem.authservice.model.response.CreateUserResponse;
+import com.ronem.authservice.model.dto.request.AdminLoginRequest;
+import com.ronem.authservice.model.dto.request.CreateUserRequest;
+import com.ronem.authservice.model.dto.response.CreateUserResponse;
 import com.ronem.authservice.model.dto.UserDTO;
-import com.ronem.authservice.model.response.LoginResponse;
+import com.ronem.authservice.model.dto.response.LoginResponse;
 import com.ronem.authservice.repository.AuthRepository;
-import com.ronem.authservice.service.jwt.JwtAuthService;
+import com.ronem.authservice.service.jwt.JwtTokenGeneratorService;
 import jakarta.transaction.Transactional;
 import jakarta.ws.rs.NotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.dao.DuplicateKeyException;
 import org.springframework.http.HttpStatus;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.MethodArgumentNotValidException;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -42,7 +40,7 @@ import java.util.List;
 @Service
 public class AuthServiceImpl implements AuthService {
     private final AuthRepository authRepository;
-    private final JwtAuthService jwtAuthService;
+    private final JwtTokenGeneratorService jwtAuthService;
     private final PasswordEncoder passwordEncoder;
     private final UserMapper userMapper;
 
@@ -104,7 +102,9 @@ public class AuthServiceImpl implements AuthService {
 
     @Transactional
     @Override
-    public LoginResponse adminLogin(String email, String password) {
+    public LoginResponse adminLogin(AdminLoginRequest request) {
+        String email = request.getEmail();
+        String password = request.getPassword();
 
         if (email.isEmpty() || password.isEmpty()) {
             throw new BadRequestException("Invalid email or password");

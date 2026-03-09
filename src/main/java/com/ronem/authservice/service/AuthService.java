@@ -1,10 +1,11 @@
 package com.ronem.authservice.service;
 
 import com.ronem.authservice.model.enums.UserRole;
-import com.ronem.authservice.model.request.CreateUserRequest;
-import com.ronem.authservice.model.response.CreateUserResponse;
+import com.ronem.authservice.model.dto.request.AdminLoginRequest;
+import com.ronem.authservice.model.dto.request.CreateUserRequest;
+import com.ronem.authservice.model.dto.response.CreateUserResponse;
 import com.ronem.authservice.model.dto.UserDTO;
-import com.ronem.authservice.model.response.LoginResponse;
+import com.ronem.authservice.model.dto.response.LoginResponse;
 
 import java.util.List;
 
@@ -30,7 +31,7 @@ public interface AuthService {
     Boolean blockUser(Long userId);
 
     //method to login superadmin and admin user
-    LoginResponse adminLogin(String email, String password);
+    LoginResponse adminLogin(AdminLoginRequest request);
 
     //method to return list of Users
     List<UserDTO> getUserLists(UserRole userRole);
