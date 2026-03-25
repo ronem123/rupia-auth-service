@@ -85,10 +85,16 @@ public class AuthController {
     //internal endpoints
     @PostMapping("/internal/users")
     ResponseEntity<ApiResponse<CreateUserResponse>> createCustomerUser(@Validated(CustomerValidation.class) @RequestBody CreateUserRequest request) {
+        log.info("Auth API Request object: {}", request);
         CreateUserResponse response = authService.createNewUser(request);
-        return ResponseEntity
-                .status(HttpStatus.CREATED)
+        log.info("Auth API Response object: {}", response);
+        log.info("Auth API Response userId: {}", response.userId());
+
+        ResponseEntity<ApiResponse<CreateUserResponse>> responseEntity = ResponseEntity
+                .status(HttpStatus.OK)
                 .body(new ApiResponse<>(true, "User created", response));
+
+        return responseEntity;
     }
 
     @DeleteMapping("/internal/users/{userId}")
